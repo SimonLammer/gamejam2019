@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://resources/M484VerticalShmupSet2.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends KinematicBody2D
+
+const ACC = 3
+const DCC = 5
+
+export (int) var speed = 200
+export (float) var rotation_speed = 1.5
+
+var curSpeed = 0
+var velocity = Vector2()
+var rotation_dir = 0
+
+func get_input():
+	rotation_dir = 0
+	velocity = Vector2()
+	if Input.is_action_pressed('right'):
+		rotation_dir += 1
+	if Input.is_action_pressed('left'):
+		rotation_dir -= 1
+	if Input.is_action_pressed('down'):
+		curSpeed -= ACC
+	if Input.is_action_pressed('up'):
+		curSpeed += ACC
+		
+	if !(Input.is_action_pressed('up') || Input.is_action_pressed('down')):
+		curSpeed -= DCC
+		curSpeed = max(curSpeed, 0)
+		
+	velocity = Vector2(-curSpeed, 0).rotated(rotation)
+
+func _physics_process(delta):
+	get_input()
+	rotation += rotation_dir * rotation_speed * delta
+	print(rotation)
+	velocity = move_and_slide(velocity)
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass"
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 161.187, 74.367, 40.4306, 22.8314 )
+
+[node name="Node" type="Node"]
+
+[node name="Node2D" type="KinematicBody2D" parent="."]
+position = Vector2( 50, 50 )
+script = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="Node2D"]
+texture = SubResource( 2 )
