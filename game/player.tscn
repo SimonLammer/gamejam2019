@@ -10,12 +10,9 @@
 [sub_resource type="GDScript" id=4]
 script/source = "extends KinematicBody2D
 
-
 export (int) var speed = 200
-export (float) var rotation_speed = 1.5
 
 var velocity = Vector2()
-var rotation_dir = 0
 
 func get_input():
 	velocity = Vector2()
@@ -85,20 +82,18 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="Node2D" type="Node2D"]
+[node name="Player" type="Node2D"]
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
 script = SubResource( 4 )
 
 [node name="MoveRight" type="AnimatedSprite" parent="KinematicBody2D"]
 frames = SubResource( 1 )
-frame = 1
 playing = true
 
 [node name="MoveLeft" type="AnimatedSprite" parent="KinematicBody2D"]
 visible = false
 frames = SubResource( 2 )
-frame = 1
 playing = true
 
 [node name="StandLeft" type="Sprite" parent="KinematicBody2D"]

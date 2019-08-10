@@ -52,11 +52,9 @@ flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 161.187, 74.367, 40.4306, 22.8314 )
 
-[node name="Node" type="Node"]
-
-[node name="Node2D" type="KinematicBody2D" parent="."]
+[node name="Truck" type="KinematicBody2D"]
 position = Vector2( 50, 50 )
 script = SubResource( 1 )
 
-[node name="Sprite" type="Sprite" parent="Node2D"]
+[node name="Sprite" type="Sprite" parent="."]
 texture = SubResource( 2 )
