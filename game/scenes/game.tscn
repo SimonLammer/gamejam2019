@@ -23,7 +23,7 @@ func _process(delta):
 #	print(playerInTruck)
 
 	# update map
-	$Map.playerPosition = $Player.global_position
+	$Map.playerPosition = $Truck.global_position if playerInTruck else $Player.global_position
 
 	# Truck enter exit logic
 	if Input.is_action_just_pressed('enter-exit'):
