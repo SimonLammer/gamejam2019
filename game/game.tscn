@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://truck.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+export (int) var enterDistance = 750
+var playerInTruck = true
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+#	print($Player.position)
+#	print($Truck.position)
+	print(($Player.position - $Truck.position).length_squared())
+	print(playerInTruck)
+	if Input.is_action_just_pressed('enter-exit'):
+		var action = false
+		if playerInTruck:
+			$Truck.disable_input()
+			$Player.set_position($Truck.position)
+			$Player.visible = true
+			action = true
+		elif ($Player.position - $Truck.position).length_squared() < enterDistance:
+			$Player.visible = false
+			$Truck.enable_input()
+			action = true
+			
+		if action:
+			playerInTruck = !playerInTruck"
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Node" type="Node" parent="."]
+script = SubResource( 1 )
+
+[node name="Player" parent="Node" instance=ExtResource( 1 )]
+visible = false
+
+[node name="Truck" parent="Node" instance=ExtResource( 2 )]
