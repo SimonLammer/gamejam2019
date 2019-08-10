@@ -24,6 +24,7 @@ func _set_player_position(value):
 	load_chunks_around_player()
 
 func _ready():
+	randomize()
 	load_chunk_classes(CHUNK_CLASSES_PATHS)
 	load_chunks_around_player()
 
@@ -55,12 +56,7 @@ func load_chunk(pos):
 
 func find_valid_chunks(pos):
 	var valid_chunks_collections = []
-	for direction in [
-		Vector2(1, 0),
-		Vector2(-1, 0),
-		Vector2(0, 1),
-		Vector2(0, -1)
-	]:
+	for direction in Global.CardinalDirections.MAIN:
 		var neighbor_position = pos + direction
 		var neighbor : Chunk = CHUNKS.get(neighbor_position)
 		if neighbor:

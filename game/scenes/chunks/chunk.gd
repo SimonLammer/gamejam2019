@@ -3,8 +3,6 @@ extends Node2D
 
 class_name Chunk
 
-var Global = preload("res://scripts/global.gd")
-
 export(bool) var _draw_bounds = true
 
 func _ready():
