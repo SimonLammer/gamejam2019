@@ -7,7 +7,7 @@
 [ext_resource path="res://resources/soldier/left-stand.png" type="Texture" id=5]
 [ext_resource path="res://resources/soldier/right-stand.png" type="Texture" id=6]
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
 
 export (int) var speed = 200
@@ -66,7 +66,7 @@ func _ready():
 func _process(delta):
 	pass"
 
-[sub_resource type="SpriteFrames" id=1]
+[sub_resource type="SpriteFrames" id=2]
 animations = [ {
 "frames": [ ExtResource( 1 ), ExtResource( 2 ) ],
 "loop": true,
@@ -74,7 +74,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=3]
 animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 4 ) ],
 "loop": true,
@@ -82,24 +82,24 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="Player" type="Node2D"]
+[node name="KinematicBody2D" type="KinematicBody2D"]
+script = SubResource( 1 )
 
-[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
-script = SubResource( 4 )
-
-[node name="MoveRight" type="AnimatedSprite" parent="KinematicBody2D"]
-frames = SubResource( 1 )
-playing = true
-
-[node name="MoveLeft" type="AnimatedSprite" parent="KinematicBody2D"]
-visible = false
+[node name="MoveRight" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
+frame = 1
 playing = true
 
-[node name="StandLeft" type="Sprite" parent="KinematicBody2D"]
+[node name="MoveLeft" type="AnimatedSprite" parent="."]
+visible = false
+frames = SubResource( 3 )
+frame = 1
+playing = true
+
+[node name="StandLeft" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 5 )
 
-[node name="StandRight" type="Sprite" parent="KinematicBody2D"]
+[node name="StandRight" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 6 )
