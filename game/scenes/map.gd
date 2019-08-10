@@ -7,16 +7,19 @@ onready var CHUNKS = {
 }
 
 var Global = preload("res://scripts/global.gd")
-var land1 = preload("res://scenes/chunks/land/Land-1.tscn")
+var land1 = preload("res://scenes/chunks/land/land-1.tscn")
 
-onready var player : Node2D = $Player
-var direction = Vector2(0, 0)
+export (Vector2) var playerPosition = Vector2() setget _set_player_position
+
+func _set_player_position(value):
+	playerPosition = value
+	load_chunks_around_player()
 
 func _ready():
 	load_chunks_around_player()
 
 func load_chunks_around_player():
-	var pos = player.global_position
+	var pos = playerPosition
 	var player_chunk = world_to_chunk(pos)
 	for x in range(-CHUNKS_TO_LOAD, CHUNKS_TO_LOAD + 1):
 		for y in range(-CHUNKS_TO_LOAD, CHUNKS_TO_LOAD + 1):
@@ -28,10 +31,6 @@ func load_chunks_around_player():
 				new_chunk.position = chunk_to_world(chunk_pos)
 				$Chunks.add_child(new_chunk)
 				CHUNKS[chunk_pos] = new_chunk
-
-func _process(delta):
-	player.translate(direction * delta * 150)
-	load_chunks_around_player()
 
 func find_valid_chunks(pos):
 	return [land1] # TODO: ask nearby chunks for valid neighbors

@@ -68,6 +68,7 @@ atlas = ExtResource( 1 )
 region = Rect2( 161.187, 74.367, 40.4306, 22.8314 )
 
 [node name="Truck" type="KinematicBody2D"]
+editor/display_folded = true
 position = Vector2( 50, 50 )
 script = SubResource( 1 )
 
