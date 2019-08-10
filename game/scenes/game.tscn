@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/truck.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/npcsystem.tscn" type="PackedScene" id=4]
+[ext_resource path="res://resources/dogfish/Dogfish.ttf" type="DynamicFontData" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -11,12 +12,14 @@ script/source = "extends Node
 export (int) var enterDistance = 750
 var playerInTruck = true
 onready var currentPlayerPosition = get_player_pos()
+var npc1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Truck/Camera2D.current = true
 	#generate npcs
-	$NPCSystem.create_npc(\"guy\", currentPlayerPosition + Vector2(50,50))
+	npc1 = $NPCSystem.create_npc(\"guy\", currentPlayerPosition + Vector2(50,50))
+#	$Camera2D.follow($Truck)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -24,6 +27,10 @@ func _process(delta):
 #	print($Truck.position)
 #	print(($Player.position - $Truck.position).length_squared())
 #	print(playerInTruck)
+	if is_player_near_npc(npc1):
+		$CanvasLayer.show_hint(\"Press 'e' to talk\")
+	else:
+		$CanvasLayer.clear_hint()
 
 	currentPlayerPosition = get_player_pos()
 
@@ -49,8 +56,38 @@ func _process(delta):
 			$Player/Camera2D.current = !playerInTruck
 			
 			
-func get_player_pos():
-	return $Truck.global_position if playerInTruck else $Player.global_position"
+func get_player_pos() -> Vector2:
+	return $Truck.global_position if playerInTruck else $Player.global_position
+	
+func is_player_near_npc(npc: Node2D) -> bool:
+	return (npc.global_position - get_player_pos()).length_squared() < enterDistance"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends CanvasLayer
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func show_hint(text: String):
+	$HintText.text = text
+
+func clear_hint():
+	$HintText.text = \"\""
+
+[sub_resource type="DynamicFont" id=2]
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 5 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -60,14 +97,34 @@ script = SubResource( 1 )
 [node name="Map" parent="Node" instance=ExtResource( 1 )]
 
 [node name="Truck" parent="Node" instance=ExtResource( 2 )]
+editor/display_folded = false
 
 [node name="Camera2D" type="Camera2D" parent="Node/Truck"]
 position = Vector2( -50, -50 )
 
 [node name="Player" parent="Node" instance=ExtResource( 3 )]
-editor/display_folded = true
 visible = false
 
 [node name="Camera2D" type="Camera2D" parent="Node/Player"]
 
 [node name="NPCSystem" parent="Node" instance=ExtResource( 4 )]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Node"]
+script = SubResource( 3 )
+
+[node name="HintText" type="Label" parent="Node/CanvasLayer"]
+margin_left = 449.506
+margin_top = 524.628
+margin_right = 695.506
+margin_bottom = 549.628
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 1, 0.984314, 0, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Press 'F' to pay respect"
+align = 1
+valign = 2
+
+[node name="Control" type="Control" parent="Node/CanvasLayer"]
+grow_horizontal = 2
+grow_vertical = 2
