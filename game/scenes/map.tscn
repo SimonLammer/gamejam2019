@@ -9,4 +9,4 @@ script = ExtResource( 1 )
 [node name="Chunks" type="Node2D" parent="."]
 
 [node name="Start" parent="Chunks" instance=ExtResource( 2 )]
-_draw_bounds = true
+_draw_bounds = false
