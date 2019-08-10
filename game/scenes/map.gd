@@ -67,6 +67,12 @@ func find_valid_chunks(pos):
 			for j in range(len(choices) - 1, 0, -1):
 				if not valid_chunks_collections[i].has(choices[j]):
 					choices.remove(j)
+		if choices.empty():
+			print("ERROR: no valid chunk found")
+			for direction in Global.CardinalDirections.MAIN:
+				var chunk = CHUNKS.get(pos + direction)
+				print(direction, " -> ", chunk.filename if chunk else "null")
+			assert(false)
 		for i in range(len(choices)):
 			choices[i] = CHUNK_CLASSES[choices[i]]
 		return choices
