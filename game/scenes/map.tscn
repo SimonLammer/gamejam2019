@@ -1,8 +1,9 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/map.gd" type="Script" id=1]
-[ext_resource path="res://scenes/chunks/land/Land-1.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/chunks/land/land-1.tscn" type="PackedScene" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
+
 
 [node name="Map" type="Node2D"]
 script = ExtResource( 1 )
