@@ -6,10 +6,10 @@ onready var CHUNKS = {
 	Vector2(0, 0): $Chunks/Start
 }
 
-var Global = preload("res://scripts/global.gd")
-
 const CHUNK_CLASSES_BASE_PATH = "res://scenes/chunks/"
 const CHUNK_CLASSES_PATHS = [
+	"city/city1",
+	"city/city2",
 	"dirt/dirt1",
 	"dirt/dirt2",
 ]
