@@ -11,8 +11,8 @@ const DCC = 5
 export (int) var speed = 200
 export (float) var rotation_speed = 1.5
 
-var curSpeed = 0
-var velocity = Vector2()
+var curSpeed = 500
+var velocity = Vector2(500, 0)
 var rotation_dir = 0
 
 var inputEnabled = true
