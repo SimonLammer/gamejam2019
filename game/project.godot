@@ -15,6 +15,11 @@ _global_script_classes=[ {
 "path": "res://scenes/chunks/chunk.gd"
 }, {
 "base": "Chunk",
+"class": "City",
+"language": "GDScript",
+"path": "res://scenes/chunks/city/city.gd"
+}, {
+"base": "Chunk",
 "class": "Dirt",
 "language": "GDScript",
 "path": "res://scenes/chunks/dirt/dirt.gd"
@@ -26,6 +31,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Chunk": "",
+"City": "",
 "Dirt": "",
 "Global": ""
 }
