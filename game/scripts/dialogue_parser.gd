@@ -21,7 +21,7 @@ func init_dialogue(target):
 	self.target = target
 	
 	if !target.has_node("DialogueConfig") || target.get_node("DialogueConfig").get("dialog") == null:
-		emit_signal("dialog_finished", target)
+		emit_signal("dialogue_finished", target)
 		print("target has no dialogue configured")
 		return
 	
