@@ -1,18 +1,32 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/truck.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/npcsystem.tscn" type="PackedScene" id=4]
+[ext_resource path="res://resources/font.tres" type="DynamicFont" id=5]
+[ext_resource path="res://scripts/dialogue_parser.gd" type="Script" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
 export (int) var enterDistance = 750
 var playerInTruck = true
+onready var currentPlayerPosition = get_player_pos()
+var npc1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Truck/Camera2D.current = true
+	#generate npcs
+	npc1 = $NPCSystem.create_npc(\"guy\", currentPlayerPosition + Vector2(50,50))
+	init_interactions()
+	
+	$Player.connect(\"interact\", self, \"on_player_interaction\")
+	$CanvasLayer.connect(\"dialogue_choice\", self, \"on_diag_choice\")
+	
+func on_diag_choice(i):
+	print(\"on_diag_choice\")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -21,8 +35,15 @@ func _process(delta):
 #	print(($Player.position - $Truck.position).length_squared())
 #	print(playerInTruck)
 
+	currentPlayerPosition = get_player_pos()
+	
+	if ($Player.canInteract):
+		$CanvasLayer.show_hint(\"Press 'e' to interact\")
+	else:
+		$CanvasLayer.clear_hint()
+
 	# update map
-	$Map.playerPosition = $Truck.global_position if playerInTruck else $Player.global_position
+	$Map.playerPosition = currentPlayerPosition
 
 	# Truck enter exit logic
 	if Input.is_action_just_pressed('enter-exit'):
@@ -40,7 +61,110 @@ func _process(delta):
 		if action:
 			playerInTruck = !playerInTruck
 			$Truck/Camera2D.current = playerInTruck
-			$Player/Camera2D.current = !playerInTruck"
+			$Player/Camera2D.current = !playerInTruck
+			
+			
+func get_player_pos() -> Vector2:
+	return $Truck.global_position if playerInTruck else $Player.global_position
+	
+func is_player_near_npc(npc: Node2D) -> bool:
+	return (npc.global_position - get_player_pos()).length_squared() < enterDistance
+	
+func init_interactions():
+	var interactables = get_tree().get_nodes_in_group(\"Interactable\")
+	for i in range(interactables.size()):
+		var currNode = get_node(interactables[i].get_path())
+		var interactionArea = currNode.get_node(\"InteractionArea\")
+		var args = Array([currNode])
+		interactionArea.connect(\"body_entered\", $Player, \"_on_InteractionArea_enter\", args)
+		interactionArea.connect(\"body_exited\", $Player, \"_on_InteractionArea_exit\", args)
+	
+func npcaction(nodeA: Node2D, nodeB: Node2D):
+	print(\"talking\")
+	
+func on_player_interaction(target):
+	print(\"interaction\")
+	$DialogParser.connect(\"dialogue_finished\", self, \"on_dialog_finished\", [], CONNECT_ONESHOT)
+	$DialogParser.init_dialogue(target)
+	
+func on_dialog_finished(target):
+	print(\"dialog finished\")
+	$Player.interaction_complete()"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends CanvasLayer
+
+signal dialogue_continue
+signal dialogue_choice
+
+var inDialogue = false
+var inChoice = false
+
+const MAX_CHOICES = 4
+
+func _ready():
+	$DialogueText.text = \"\"
+	$HintText.text = \"\"
+
+func show_hint(text: String):
+	if !inDialogue && !inChoice:
+		$HintText.text = text
+
+func clear_hint():
+	$HintText.text = \"\"
+	
+func show_dialogue_text(text: String):
+	inDialogue = true
+	$HintText.text = \"Press 'e' to continue\"
+	$DialogueText.text = text
+	
+func show_dialogue_choices(choices: Array):
+	inChoice = true
+	$HintText.text = \"\"
+	
+	var content = \"\"
+	var count = min(len(choices), MAX_CHOICES)
+	for i in range(count):
+		content = \"%s%d. %s \\n\" % [content, i + 1, choices[i]]
+		
+	$DialogueText.text = content
+	
+func end_dialogue():
+	$DialogueText.text = \"\"
+	inChoice = false
+	inDialogue = false
+
+func _process(delta):
+	if inDialogue and Input.is_action_just_pressed(\"interact\"):
+		emit_signal(\"dialogue_continue\")
+	elif inChoice:
+		if Input.is_action_just_pressed(\"dialogue_choice_1\"):
+			print(\"choice 1 selected\")
+			inChoice = false
+			emit_signal(\"dialogue_choice\", 0)
+		elif Input.is_action_just_pressed(\"dialogue_choice_2\"):
+			print(\"choice 2 selected\")
+			inChoice = false
+			emit_signal(\"dialogue_choice\", 1)
+		elif Input.is_action_just_pressed(\"dialogue_choice_3\"):
+			print(\"choice 3 selected\")
+			inChoice = false
+			emit_signal(\"dialogue_choice\", 2)
+		elif Input.is_action_just_pressed(\"dialogue_choice_4\"):
+			print(\"choice 4 selected\")
+			inChoice = false
+			emit_signal(\"dialogue_choice\", 3)"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
+
+export (String) var text setget text_set, text_get
+
+func text_set(text: String):
+	$DialogueText.text = text
+	
+func text_get() -> String:
+	return $DialogueText.text"
 
 [node name="Node2D" type="Node2D"]
 
@@ -59,3 +183,46 @@ position = Vector2( -50, -50 )
 visible = false
 
 [node name="Camera2D" type="Camera2D" parent="Node/Player"]
+
+[node name="NPCSystem" parent="Node" instance=ExtResource( 4 )]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Node"]
+script = SubResource( 2 )
+
+[node name="HintText" type="Label" parent="Node/CanvasLayer"]
+show_behind_parent = true
+margin_left = 84.8364
+margin_top = 204.812
+margin_right = 330.836
+margin_bottom = 229.812
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color = Color( 1, 0.984314, 0, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Press 'F' to pay respect"
+align = 1
+valign = 2
+
+[node name="Control" type="Control" parent="Node/CanvasLayer"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogueText" type="Node" parent="Node/CanvasLayer"]
+script = SubResource( 3 )
+
+[node name="DialogueText" type="RichTextLabel" parent="Node/CanvasLayer/DialogueText"]
+margin_left = 17.0734
+margin_top = 103.056
+margin_right = 386.073
+margin_bottom = 230.056
+custom_fonts/normal_font = ExtResource( 5 )
+custom_colors/default_color = Color( 1, 0.984314, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Hello! I am the prof
+
+1. Hello
+
+2. Who Are you?"
+
+[node name="DialogParser" type="Node" parent="Node"]
+script = ExtResource( 6 )
