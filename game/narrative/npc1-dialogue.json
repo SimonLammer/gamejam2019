@@ -1,0 +1,48 @@
+{
+	"start":
+	[
+		{
+			"q": "Hello. Who are you?",
+			"a": "I am just some old guy trying to survive by selling some ice cream.",
+			"next": "whatflavors"
+		},
+		{
+			"q": "Give me ice cream!",
+			"a": "No need to be so rude! What flavour do you want?",
+			"next":  "flavorselect"
+		}
+
+	],
+	"whatflavors":
+	[
+		{
+			"q":"What flavors do you have?",
+			"a": "We have vanilla, chocolate and strawberry.",
+			"next":"flavorselect"
+		}
+	],
+	"flavorselect":
+	[
+		{
+			"q": "Strawberry",
+			"a": "Here you go!",
+			"effect": {
+				"hunger": -10
+			}
+		},
+		{
+			"q": "Vanilla",
+			"a": "Here you go!",
+			"effect": {
+				"hunger": -10
+			}
+		},
+		{
+			"q": "Chocolate",
+			"a": "Here you go!",
+			"effect": {
+				"hunger": -10
+			}
+		}
+	]
+}
