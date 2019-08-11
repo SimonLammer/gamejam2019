@@ -23,7 +23,6 @@ func _ready():
 	init_interactions()
 	
 	$Player.connect(\"interact\", self, \"on_player_interaction\")
-	
 	$CanvasLayer.connect(\"dialogue_choice\", self, \"on_diag_choice\")
 	
 func on_diag_choice(i):
@@ -191,10 +190,11 @@ visible = false
 script = SubResource( 2 )
 
 [node name="HintText" type="Label" parent="Node/CanvasLayer"]
-margin_left = 449.506
-margin_top = 524.628
-margin_right = 695.506
-margin_bottom = 549.628
+show_behind_parent = true
+margin_left = 84.8364
+margin_top = 204.812
+margin_right = 330.836
+margin_bottom = 229.812
 custom_fonts/font = ExtResource( 5 )
 custom_colors/font_color = Color( 1, 0.984314, 0, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
@@ -211,10 +211,10 @@ grow_vertical = 2
 script = SubResource( 3 )
 
 [node name="DialogueText" type="RichTextLabel" parent="Node/CanvasLayer/DialogueText"]
-margin_left = 73.2924
-margin_top = 388.708
-margin_right = 973.292
-margin_bottom = 588.708
+margin_left = 17.0734
+margin_top = 103.056
+margin_right = 386.073
+margin_bottom = 230.056
 custom_fonts/normal_font = ExtResource( 5 )
 custom_colors/default_color = Color( 1, 0.984314, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
