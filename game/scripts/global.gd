@@ -1,7 +1,7 @@
 class_name Global
 
-const CHUNK_SIZE = Vector2(8, 8) # size of a chunk in cells
-const CELL_SIZE = Vector2(30, 30)
+const CHUNK_SIZE = Vector2(16, 16) # size of a chunk in cells
+const CELL_SIZE = Vector2(16, 16)
 
 class CardinalDirections:
 	const NORTH = Vector2(0, -1)
@@ -10,3 +10,6 @@ class CardinalDirections:
 	const WEST  = Vector2(-1, 0)
 	
 	const MAIN = [NORTH, EAST, SOUTH, WEST]
+
+static func random_chunk_cell():
+	return Vector2(randi() % int(CHUNK_SIZE.x), randi() % int(CHUNK_SIZE.y))

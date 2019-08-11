@@ -10,11 +10,11 @@ var Global = preload("res://scripts/global.gd")
 
 const CHUNK_CLASSES_BASE_PATH = "res://scenes/chunks/"
 const CHUNK_CLASSES_PATHS = [
-	"land/land-1",
-	"land/land-2",
+	"dirt/dirt1",
+	"dirt/dirt2",
 ]
 const CHUNK_CLASSES_EXTENSION = ".tscn"
-var CHUNK_CLASSES = {} # example entry: "land/land-1": preload("res://scenes/chunks/land/land-1.tscn")
+var CHUNK_CLASSES = {} # example entry: "dirt/dirt1": load("res://scenes/chunks/dirt/dirt1.tscn")
 var DEFAULT_CHUNK_CLASS
 
 export (Vector2) var playerPosition = Vector2() setget _set_player_position
