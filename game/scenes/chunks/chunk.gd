@@ -1,18 +1,15 @@
 tool
 extends Node2D
 
-var Global = preload("res://scripts/global.gd")
+class_name Chunk
 
-export(bool) var _draw_bounds = true setget init
-
-func init(val):
-	_draw_bounds = val
+export(bool) var _draw_bounds = true
 
 func _ready():
 	pass
 
 func _draw():
-	if _draw_bounds && Engine.editor_hint:
+	if Engine.editor_hint && _draw_bounds:
 		var max_x = Global.CELL_SIZE.x * Global.CHUNK_SIZE.x
 		var max_y = Global.CELL_SIZE.y * Global.CHUNK_SIZE.y
 		var half_width=1
@@ -25,3 +22,6 @@ func _draw():
 		];
 		for i in range(1, len(points)):
 			draw_line(points[i-1], points[i], Color.red, 3)
+
+func get_valid_neighbors(direction: Vector2):
+	return [] # override in concrete class
